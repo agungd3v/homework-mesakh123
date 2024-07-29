@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface CProps {
@@ -64,8 +65,20 @@ export default function ProductTable(param: CProps) {
                     <td>{a.product_image}</td>
                     <td>
                       <label
+                        htmlFor="view_product"
+                        className="text-xs py-2 px-3 rounded-l bg-blue-600 text-white cursor-pointer"
+                      >
+                        View
+                      </label>
+                      <Link
+                        href={`/dashboard/admin/product/${a._id}`}
+                        className="text-xs py-2 px-3 bg-green-600 text-white"
+                      >
+                        Update
+                      </Link>
+                      <label
                         htmlFor={`delete_product`}
-                        className="text-xs py-2 px-3 rounded bg-red-600 text-white cursor-pointer"
+                        className="text-xs py-2 px-3 rounded-r bg-red-600 text-white cursor-pointer"
                         onClick={() => setDeleted(a._id, a.product_name)}
                       >
                         Delete
