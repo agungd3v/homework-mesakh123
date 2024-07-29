@@ -1,22 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { BiMenu } from "react-icons/bi";
+import { rts } from "../routes/sidebar";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface LProps {
   children: React.ReactNode;
 }
 
 export default function DashboardLayout(props: LProps) {
-  const router = useRouter();
+  const user = useSelector((state: any) => state.user);
+
+  const [menus, setMenus] = useState<any[]>([]);
 
   const logoutUser = async () => {
     const request = await fetch("/api/auth", {method: "DELETE"});
     if (request.status == 200) {
-      return router.replace("/auth");
+      return location.href = "/auth";
     }
   }
+
+  useEffect(() => {
+    const r = rts.filter((a: any) => a.role == user.data.role);
+    setMenus(r);
+  }, [user]);
 
   return (
     <div className="drawer lg:drawer-open">
@@ -58,14 +69,16 @@ export default function DashboardLayout(props: LProps) {
         <label htmlFor="sidebar" className="drawer-overlay"></label>
         <ul className="menu bg-white min-h-full w-80 p-4">
           {/* Sidebar content here */}
-          <li>
-            <Link href={"/dashboard/admin"}>Dashboard</Link>
-          </li>
-          <li>
-            <Link href={"/dashboard/admin/product"}>Product</Link>
-          </li>
+          {menus.map((data: any, index: number) => {
+            return (
+              <li key={index}>
+                <Link href={data.path}>{data.label}</Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
+      <ToastContainer />
     </div>
   )
 }

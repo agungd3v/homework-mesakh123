@@ -71,7 +71,7 @@ export default function ProductTable(param: CProps) {
                   <tr key={i}>
                     <td>{i + 1}</td>
                     <td>{a.product_name}</td>
-                    <td>{a.product_price}</td>
+                    <td>Rp. {Intl.NumberFormat("id-ID").format(parseInt(a.product_price))}</td>
                     <td>{a.product_image}</td>
                     <td>
                       <label
@@ -118,7 +118,7 @@ export default function ProductTable(param: CProps) {
         <div className="modal-box">
           <h3 className="text-lg font-bold">{productName}</h3>
           <div className="flex justify-center items-center my-3">
-            <Image src={`/images/${productImage}`} width={200} height={200} alt="" />
+            {productImage && <Image src={`/images/${productImage}`} width={200} height={200} alt="" />}
           </div>
           <div className="font-bold text-sm">
             Price:

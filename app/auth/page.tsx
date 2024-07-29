@@ -1,9 +1,14 @@
 import { login } from "../utils/session";
+import { redirect } from "next/navigation";
 
 export default async function Auth() {
   const submitLogin = async (param: FormData) => {
     "use server";
-    await login(param);
+
+    const loginUser = await login(param);
+    if (loginUser.status) {
+      return redirect("/dashboard");
+    }
   }
 
   return (

@@ -33,15 +33,14 @@ export async function login(formData: FormData) {
     const session = await encrypt({ user, expires });
   
     cookies().set("session", session, { expires, httpOnly: true });
-    return redirect("/dashboard");
+    return {status: true, message: "Login oke!"};
   }
 
-  return redirect("/auth");
+  return {status: false, message: "Login failed!"};
 }
 
 export async function logout() {
   cookies().set("session", "", { expires: new Date(0) });
-  redirect("/auth");
 }
 
 export async function getSession() {
