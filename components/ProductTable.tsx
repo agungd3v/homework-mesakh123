@@ -1,5 +1,6 @@
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface CProps {
@@ -11,10 +12,14 @@ interface CProps {
 export default function ProductTable(param: CProps) {
   const [productId, setProductId] = useState<string>("");
   const [productName, setProductName] = useState<string>("");
+  const [productPrice, setProductPrice] = useState<string>("");
+  const [productImage, setProductImage] = useState<string>("");
 
-  const setDeleted = (id: string, name: string) => {
+  const setSelected = (id: string, name: string, price: string, image: string) => {
     setProductId(id);
     setProductName(name);
+    setProductPrice(price);
+    setProductImage(image);
   }
 
   const deleteData = async () => {
@@ -53,7 +58,12 @@ export default function ProductTable(param: CProps) {
             <tbody>
               {param.loading && (
                 <tr>
-                  <td colSpan={5}>loading...</td>
+                  <td colSpan={5} className="text-center">loading...</td>
+                </tr>
+              )}
+              {!param.loading && param.data.length < 1 && (
+                <tr>
+                  <td colSpan={5} className="text-center">Data not found</td>
                 </tr>
               )}
               {!param.loading && param.data.length > 0 && param.data.map((a: any, i: number) => {
@@ -67,6 +77,7 @@ export default function ProductTable(param: CProps) {
                       <label
                         htmlFor="view_product"
                         className="text-xs py-2 px-3 rounded-l bg-blue-600 text-white cursor-pointer"
+                        onClick={() => setSelected(a._id, a.product_name, a.product_price, a.product_image)}
                       >
                         View
                       </label>
@@ -77,9 +88,9 @@ export default function ProductTable(param: CProps) {
                         Update
                       </Link>
                       <label
-                        htmlFor={`delete_product`}
+                        htmlFor="delete_product"
                         className="text-xs py-2 px-3 rounded-r bg-red-600 text-white cursor-pointer"
-                        onClick={() => setDeleted(a._id, a.product_name)}
+                        onClick={() => setSelected(a._id, a.product_name, a.product_price, a.product_image)}
                       >
                         Delete
                       </label>
@@ -87,16 +98,11 @@ export default function ProductTable(param: CProps) {
                   </tr>
                 )
               })}
-              {!param.loading && param.data.length < 1 && (
-                <tr>
-                  <td colSpan={5} className="text-center">Data not found</td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
       </div>
-      <input type="checkbox" id={`delete_product`} className="modal-toggle" />
+      <input type="checkbox" id="delete_product" className="modal-toggle" />
       <div className="modal" role="dialog">
         <div className="modal-box">
           <h3 className="text-lg font-bold">Confirm Delete</h3>
@@ -105,7 +111,22 @@ export default function ProductTable(param: CProps) {
             <button className="bg-red-600 text-white py-2 px-3 rounded" onClick={deleteData}>Delete</button>
           </div>
         </div>
-        <label className="modal-backdrop" htmlFor={`delete_product`}>Close</label>
+        <label className="modal-backdrop" htmlFor="delete_product">Close</label>
+      </div>
+      <input type="checkbox" id="view_product" className="modal-toggle" />
+      <div className="modal" role="dialog">
+        <div className="modal-box">
+          <h3 className="text-lg font-bold">{productName}</h3>
+          <div className="flex justify-center items-center my-3">
+            <Image src={`/images/${productImage}`} width={200} height={200} alt="" />
+          </div>
+          <div className="font-bold text-sm">
+            Price:
+            <br />
+            <span className="text-lg text-blue-600">Rp. {Intl.NumberFormat("id-ID").format(parseInt(productPrice))}</span>
+          </div>
+        </div>
+        <label className="modal-backdrop" htmlFor="view_product">Close</label>
       </div>
     </>
   );
