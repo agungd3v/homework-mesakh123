@@ -3,7 +3,7 @@ import path from "path";
 
 export const storeImage = async (file: File) => {
   const buffer = Buffer.from(await file.arrayBuffer());
-  const filename =  file.name.replaceAll(" ", "_");
+  const filename =  new Date().getTime() + "_" + file.name.length + path.extname(file.name);
 
   try {
     await writeFile(

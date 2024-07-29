@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       product_price: data.get("product_price"),
       product_image: storeFile.message
     };
-    await database.insert(document);
+    await database.products.insert(document);
 
     return NextResponse.json(
       {message: document},
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const getData = new Promise((resolve, reject) => {
-      database.find({}, (err: any, docs: any) => resolve(docs));
+      database.products.find({}, (err: any, docs: any) => resolve(docs));
     });
     const data = await getData;
 
@@ -52,7 +52,7 @@ export async function DELETE(request: Request) {
     const {id} = await request.json();
 
     const getData = new Promise((resolve, reject) => {
-      database.findOne({_id: id}, (err: any, doc: any) => resolve(doc));
+      database.products.findOne({_id: id}, (err: any, doc: any) => resolve(doc));
     });
     const data: any = await getData;
 
@@ -60,7 +60,7 @@ export async function DELETE(request: Request) {
     if (!deleteFile.status) throw (deleteFile.message);
 
     const deleteData: any = new Promise((resolve, reject) => {
-      database.remove({_id: id}, {}, (err: any, numRemoved: any) => resolve(numRemoved));
+      database.products.remove({_id: id}, {}, (err: any, numRemoved: any) => resolve(numRemoved));
     });
     const getDeleted = await deleteData;
     if (getDeleted < 1) throw ("error deleted data");
