@@ -10,6 +10,11 @@ export const rts = [
     role: 1
   },
   {
+    label: "My Order",
+    path: "/dashboard/admin/order",
+    role: 1
+  },
+  {
     label: "Dashboard",
     path: "/dashboard/manager",
     role: 2

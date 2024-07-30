@@ -14,6 +14,8 @@ export default function ProductTable(param: CProps) {
   const [productName, setProductName] = useState<string>("");
   const [productPrice, setProductPrice] = useState<string>("");
   const [productImage, setProductImage] = useState<string>("");
+  const [loadDelete, setLoadDelete] = useState<boolean>(false);
+  const [modal, setModal] = useState<boolean>(false);
 
   const setSelected = (id: string, name: string, price: string, image: string) => {
     setProductId(id);
@@ -23,12 +25,21 @@ export default function ProductTable(param: CProps) {
   }
 
   const deleteData = async () => {
-    const request = await axios.delete("/api/admin/product", {
-      data: {id: productId}
-    });
-    if (request.status == 200) {
-      param.callback();
+    setLoadDelete(true);
+
+    try {
+      const request = await axios.delete("/api/admin/product", {
+        data: {id: productId}
+      });
+      if (request.status == 200) {
+        param.callback();
+        setModal(false);
+      }
+    } catch (error: any) {
+      console.log(error);
     }
+
+    setLoadDelete(false);
   }
 
   return (
@@ -102,18 +113,34 @@ export default function ProductTable(param: CProps) {
           </table>
         </div>
       </div>
-      <input type="checkbox" id="delete_product" className="modal-toggle" />
+      <input
+        type="checkbox"
+        id="delete_product"
+        className="modal-toggle"
+        checked={modal}
+        onChange={(v: any) => setModal(v.target.checked)}
+      />
       <div className="modal" role="dialog">
         <div className="modal-box">
           <h3 className="text-lg font-bold">Confirm Delete</h3>
           <p className="py-4">are you sure you want to delete <b>{productName}</b>?</p>
           <div className="flex items-center justify-end">
-            <button className="bg-red-600 text-white py-2 px-3 rounded" onClick={deleteData}>Delete</button>
+            <button
+              className="bg-red-600 text-white py-2 px-3 rounded"
+              onClick={deleteData}
+              disabled={loadDelete}
+            >
+                {loadDelete ? "Deleting..." : "Delete"}
+            </button>
           </div>
         </div>
         <label className="modal-backdrop" htmlFor="delete_product">Close</label>
       </div>
-      <input type="checkbox" id="view_product" className="modal-toggle" />
+      <input 
+        type="checkbox"
+        id="view_product"
+        className="modal-toggle"
+      />
       <div className="modal" role="dialog">
         <div className="modal-box">
           <h3 className="text-lg font-bold">{productName}</h3>
