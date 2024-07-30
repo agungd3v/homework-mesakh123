@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import database from "@/database";
 import { getSession } from "@/app/utils/session";
 
@@ -16,10 +16,14 @@ export async function POST(request: Request) {
     if (!session) throw "Error, user not found";
 
     const document = {
-      user_id: session.user.name,
+      user_id: session.user.id,
       product_id: product._id,
+      product_name: product.product_name,
+      product_price: product.product_price,
+      product_image: product.product_image,
       quantity: requestData.data.quantity,
-      total: parseInt(product.product_price) * parseInt(requestData.data.quantity)
+      total: parseInt(product.product_price) * parseInt(requestData.data.quantity),
+      status: 1
     }
     await database.orders.insert(document);
 
@@ -32,5 +36,42 @@ export async function POST(request: Request) {
       {message: error},
       {status: 400}
     );
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const session: any = await getSession();
+    if (!session) throw "Error, user not found";
+
+    let query = {};
+
+    const requestStatus = request.nextUrl.searchParams.get("status");
+    if (requestStatus) {
+      if (requestStatus == "undefined") {
+        query = {user_id: session.user.id};
+      } else {
+        if (requestStatus == "0") {
+          query = {user_id: session.user.id};
+        } else {
+          query = {user_id: session.user.id, status: parseInt(requestStatus)}
+        }
+      }
+    }
+
+    const getOrders = new Promise((resolve, reject) => {
+      database.orders.find(query, (err: any, docs: any) => resolve(docs));
+    });
+    const orders = await getOrders;
+
+    return NextResponse.json(
+      {message: orders},
+      {status: 200}
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      {message: error},
+      {status: 400}
+    )
   }
 }

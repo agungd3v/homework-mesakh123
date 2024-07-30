@@ -25,9 +25,9 @@ export async function decrypt(param: string) {
 export async function login(formData: FormData) {
   if (["admin", "manager", "viewer"].includes(formData.get("username") as string)) {
     let user = {};
-    if (formData.get("username") == "admin") user = {name: "Admin", role: 1};
-    if (formData.get("username") == "manager") user = {name: "Manager", role: 2};
-    if (formData.get("username") == "viewer") user = {name: "Viewer", role: 3};
+    if (formData.get("username") == "admin") user = {id: 1, name: "Admin", role: 1};
+    if (formData.get("username") == "manager") user = {id: 2, name: "Manager", role: 2};
+    if (formData.get("username") == "viewer") user = {id: 3, name: "Viewer", role: 3};
   
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
     const session = await encrypt({ user, expires });
