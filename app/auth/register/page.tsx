@@ -16,7 +16,7 @@ export default function Register() {
     username: "",
     password: "",
     role: "0",
-    active: 1
+    active: "1"
   });
   const [loading, setLoading] = useState<boolean>(false);
 

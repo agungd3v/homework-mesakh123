@@ -22,8 +22,9 @@ export async function POST(request: Request) {
         (err: any, doc: any) => resolve(doc)
       );
     });
-    const user = await getData;
+    const user: any = await getData;
     if (!user) throw "User not found!";
+    if (user.active == "0") throw "User deactive";
 
     const generate = await generateSession(user);
     if (!generate) throw "Error, generating cookie";
