@@ -20,6 +20,11 @@ export const rts = [
     role: 2
   },
   {
+    label: "Orders",
+    path: "/dashboard/manager/order",
+    role: 2
+  },
+  {
     label: "Dashboard",
     path: "/dashboard/viewer",
     role: 3

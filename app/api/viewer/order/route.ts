@@ -17,6 +17,7 @@ export async function POST(request: Request) {
 
     const document = {
       user_id: session.user.id,
+      user_name: session.user.name,
       product_id: product._id,
       product_name: product.product_name,
       product_price: product.product_price,

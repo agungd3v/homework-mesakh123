@@ -108,7 +108,7 @@ export default function DashboardViewer() {
           <div className="font-bold text-sm">
             Price:
             <br />
-            <span className="text-lg text-blue-600">Rp. {Intl.NumberFormat("id-ID").format(parseInt(productPrice))}</span>
+            <span className="text-lg text-blue-600">Rp. {Intl.NumberFormat("id-ID").format(parseInt(productPrice) * quantity)}</span>
           </div>
           <div className="mt-3 flex justify-end">
             <div className="flex items-center gap-5">
