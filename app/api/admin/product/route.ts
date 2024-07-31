@@ -6,6 +6,10 @@ export async function POST(request: Request) {
   try {
     const data = await request.formData();
 
+    if (data.get("product_name") != "") throw "Product name cannot be empty";
+    if (data.get("product_price") != "") throw "Product price cannot be empty";
+    if (typeof data.get("product_image") != "undefined") throw "Product image cannot be empty";
+
     const storeFile = await storeImage(data.get("product_image") as File);
     if (!storeFile.status) throw (storeFile.message);
 
