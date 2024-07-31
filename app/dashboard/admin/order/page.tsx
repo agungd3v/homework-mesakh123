@@ -1,6 +1,6 @@
 "use client";
 
-import { toastSuccess } from "@/plugins/toasification";
+import { toastError, toastSuccess } from "@/plugins/toasification";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -48,7 +48,7 @@ export default function AdminOrder() {
         getOrders();
       }
     } catch (error: any) {
-      console.log(error);
+      toastError(error.response.data.message);
     }
 
     setLoadChangeStatus(false);

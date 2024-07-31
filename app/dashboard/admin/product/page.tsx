@@ -12,9 +12,13 @@ export default function AdminProduct() {
   const getProduct = async () => {
     setLoadData(true);
 
-    const request = await axios.get("/api/admin/product");
-    if (request.status == 200) {
-      setData(request.data.message);
+    try {
+      const request = await axios.get("/api/admin/product");
+      if (request.status == 200) {
+        setData(request.data.message);
+      }
+    } catch (error: any) {
+      console.log(error);
     }
 
     setLoadData(false);

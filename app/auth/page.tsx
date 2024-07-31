@@ -35,7 +35,6 @@ export default function Login() {
         router.push("/dashboard");
       }
     } catch (error: any) {
-      console.log(error);
       toastError(error.response.data.message);
     }
 

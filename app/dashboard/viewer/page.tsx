@@ -20,9 +20,13 @@ export default function DashboardViewer() {
   const getProduct = async () => {
     setLoading(true);
 
-    const request = await axios.get("/api/viewer/product");
-    if (request.status == 200) {
-      setProducts(request.data.message);
+    try {
+      const request = await axios.get("/api/viewer/product");
+      if (request.status == 200) {
+        setProducts(request.data.message);
+      }
+    } catch (error: any) {
+      console.log(error);
     }
 
     setLoading(false);
@@ -48,7 +52,6 @@ export default function DashboardViewer() {
         setModal(false);
       }
     } catch (error: any) {
-      console.log(error);
       toastError(error.response.data.message);
     }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { toastError } from "@/plugins/toasification";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -14,15 +15,20 @@ export default function AdminProductCreate() {
   const imageRef: any = useRef(null);
 
   const storeProduct = async () => {
-    const formData = new FormData();
-    formData.append("product_name", product.product_name);
-    formData.append("product_price", product.product_price);
-    formData.append("product_image", imageRef.current.files[0]);
+    try {
+      const formData = new FormData();
+      formData.append("product_name", product.product_name);
+      formData.append("product_price", product.product_price);
+      formData.append("product_image", imageRef.current.files[0]);
 
-    const request = await axios.post("/api/admin/product", formData);
-    if (request.status == 200) {
-      return router.back();
+      const request = await axios.post("/api/admin/product", formData);
+      if (request.status == 200) {
+        return router.back();
+      }
+    } catch (error: any) {
+      toastError(error.response.data.message);
     }
+    
   }
 
   const changeProductData = (e: any, prefix: string) => {

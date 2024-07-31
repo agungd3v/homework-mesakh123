@@ -92,7 +92,7 @@ export async function GET(request: Request) {
     );
   } catch (error: any) {
     return NextResponse.json(
-      {message: error.message},
+      {message: error},
       {status: 400}
     );
   }

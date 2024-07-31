@@ -2,6 +2,7 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { toastError } from "@/plugins/toasification";
 
 interface CProps {
   data: any[];
@@ -36,7 +37,7 @@ export default function ProductTable(param: CProps) {
         setModal(false);
       }
     } catch (error: any) {
-      console.log(error);
+      toastError(error.response.data.message);
     }
 
     setLoadDelete(false);

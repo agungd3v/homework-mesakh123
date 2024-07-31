@@ -1,5 +1,6 @@
 "use client";
 
+import { toastError } from "@/plugins/toasification";
 import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -26,7 +27,7 @@ export default function AdminProductUpdate() {
         return router.back();
       }
     } catch (error: any) {
-      console.log(error.response.data);
+      toastError(error.response.data.message);
     }
   }
 
