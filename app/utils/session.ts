@@ -1,7 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { NextRequest, NextResponse } from "next/server";
 
 const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
@@ -22,17 +20,14 @@ export async function decrypt(param: string) {
   return payload;
 }
 
-export async function login(formData: FormData) {
-  if (["admin", "manager", "viewer"].includes(formData.get("username") as string)) {
-    let user = {};
-    if (formData.get("username") == "admin") user = {id: 1, name: "Admin", role: 1};
-    if (formData.get("username") == "manager") user = {id: 2, name: "Manager", role: 2};
-    if (formData.get("username") == "viewer") user = {id: 3, name: "Viewer", role: 3};
-  
+export async function generateSession(user: any) {
+  if (user) {
+    delete user.password;
+
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
-    const session = await encrypt({ user, expires });
-  
-    cookies().set("session", session, { expires, httpOnly: true });
+    const session = await encrypt({user, expires});
+    cookies().set("session", session, {expires, httpOnly: true});
+
     return {status: true, message: "Login oke!"};
   }
 
@@ -40,7 +35,7 @@ export async function login(formData: FormData) {
 }
 
 export async function logout() {
-  cookies().set("session", "", { expires: new Date(0) });
+  cookies().set("session", "", {expires: new Date(0)});
 }
 
 export async function getSession() {
