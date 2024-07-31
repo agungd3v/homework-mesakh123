@@ -1,9 +1,10 @@
 "use client";
 
-import { toastError } from "@/plugins/toasification";
 import axios from "axios";
+import { toastError, toastSuccess } from "@/plugins/toasification";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import Cleave from "cleave.js/react";
 
 export default function AdminProductCreate() {
   const router = useRouter();
@@ -18,11 +19,12 @@ export default function AdminProductCreate() {
     try {
       const formData = new FormData();
       formData.append("product_name", product.product_name);
-      formData.append("product_price", product.product_price);
+      formData.append("product_price", product.product_price.split(".").join(""));
       formData.append("product_image", imageRef.current.files[0]);
 
       const request = await axios.post("/api/admin/product", formData);
       if (request.status == 200) {
+        toastSuccess(request.data.message);
         return router.back();
       }
     } catch (error: any) {
@@ -54,8 +56,13 @@ export default function AdminProductCreate() {
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="product_price" className="text-sm">Product Price</label>
-        <input
-          type="text"
+        <Cleave
+          options={{
+            numeral: true,
+            numeralDecimalMark: "thousand",
+            delimiter: ".",
+            numeralPositiveOnly: true
+          }}
           placeholder="Product price"
           className="border w-full text-sm h-[48px] px-3 outline-none rounded"
           autoComplete="off"

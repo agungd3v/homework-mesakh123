@@ -11,6 +11,8 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.2",
+    "cleave-zen": "^0.0.17",
+    "cleave.js": "^1.6.0",
     "jose": "^5.6.3",
     "nedb": "^1.8.0",
     "next": "14.2.5",
@@ -19,9 +21,11 @@
     "react-icons": "^5.2.1",
     "react-redux": "^9.1.2",
     "react-toastify": "^10.0.5",
-    "redux": "^5.0.1"
+    "redux": "^5.0.1",
+    "remove": "^0.1.5"
   },
   "devDependencies": {
+    "@types/cleave.js": "^1.4.12",
     "@types/nedb": "^1.8.16",
     "@types/node": "^20",
     "@types/react": "^18",

@@ -4,7 +4,8 @@ import path from "path";
 export const storeImage = async (file: File) => {
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
-    const filename =  new Date().getTime() + "_" + file.name.length + path.extname(file.name);
+    const filePath = path.extname(file.name);
+    const filename =  new Date().getTime() + "_" + file.name.length + filePath;
 
     await writeFile(
       path.join(process.cwd(), "public/images/" + filename),
