@@ -32,7 +32,7 @@ export default function Login() {
         data: login
       });
       if (request.status == 200) {
-        router.push("/dashboard");
+        location.href = "/dashboard";
       }
     } catch (error: any) {
       toastError(error.response.data.message);
