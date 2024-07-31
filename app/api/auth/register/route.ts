@@ -11,6 +11,12 @@ export async function POST(request: Request) {
     if (data.password == "") throw "Password cannot be empty";
     if (data.role == "0") throw "Role cannot be empty";
 
+    const getData = new Promise((resolve, reject) => {
+      database.users.findOne({username: data.username + "asd"}, (err: any, doc: any) => resolve(doc));
+    });
+    const user = await getData;
+    if (!user) throw "Username already taken";
+
     await database.users.insert(data);
 
     return NextResponse.json(
