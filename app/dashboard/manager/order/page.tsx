@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function ManagerOrder() {
+  const [selectedData, setSelectedData] = useState<any>(null);
   const [data, setData] = useState<any[]>([]);
   const [status, setStatus] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
@@ -15,6 +16,10 @@ export default function ManagerOrder() {
     {label: "Process", value: 2},
     {label: "Complete", value: 3},
   ];
+
+  const setSelected = (data: any) => {
+    setSelectedData(data);
+  }
 
   const getOrders = async () => {
     setLoading(true);
@@ -93,21 +98,30 @@ export default function ManagerOrder() {
                         <span className="font-bold ml-2">Rp{Intl.NumberFormat("id-ID").format(ab.total)}</span>
                       </td>
                       <td>
-                        {ab.status == 1 && (
-                          <span className="py-1.5 px-3 rounded text-white bg-blue-600">
-                            Pending
-                          </span>
-                        )}
-                        {ab.status == 2 && (
-                          <span className="py-1.5 px-3 rounded text-white bg-yellow-600">
-                            Process
-                          </span>
-                        )}
-                        {ab.status == 3 && (
-                          <span className="py-1.5 px-3 rounded text-white bg-green-600">
-                            Complete
-                          </span>
-                        )}
+                        <div className="flex items-center">
+                          <label
+                            htmlFor="view_product"
+                            className="text-xs py-2 px-3 rounded-l bg-blue-600 text-white cursor-pointer"
+                            onClick={() => setSelected(ab)}
+                          >
+                            View
+                          </label>
+                          {ab.status == 1 && (
+                            <span className="py-1.5 px-3 rounded-r text-white bg-blue-600">
+                              Pending
+                            </span>
+                          )}
+                          {ab.status == 2 && (
+                            <span className="py-1.5 px-3 rounded-r text-white bg-yellow-600">
+                              Process
+                            </span>
+                          )}
+                          {ab.status == 3 && (
+                            <span className="py-1.5 px-3 rounded-r text-white bg-green-600">
+                              Complete
+                            </span>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );
@@ -121,6 +135,47 @@ export default function ManagerOrder() {
             )}
           </tbody>
         </table>
+      </div>
+      <input 
+        type="checkbox"
+        id="view_product"
+        className="modal-toggle"
+      />
+      <div className="modal" role="dialog">
+        <div className="modal-box">
+          {/* <h3 className="text-lg font-bold">{productName}</h3> */}
+          <div className="flex justify-center items-center my-3">
+            {selectedData && <Image src={`/images/${selectedData.product_image}`} width={200} height={200} alt="" />}
+          </div>
+          {selectedData && (
+            <div className="flex flex-col gap-2">
+              <div className="font-bold text-sm">
+                Product Name:
+                <br />
+                <span className="text-lg text-blue-600">{selectedData.product_name}</span>
+              </div>
+              <div className="font-bold text-sm">
+                Price:
+                <br />
+                <span className="text-lg text-blue-600">Rp{Intl.NumberFormat("id-ID").format(parseInt(selectedData.product_price))}</span>
+              </div>
+              <div className="font-bold text-sm">
+                Checkout total:
+                <br />
+                <span className="text-lg text-blue-600">
+                  (x{selectedData.quantity})
+                  Rp{Intl.NumberFormat("id-ID").format(parseInt(selectedData.total))}
+                </span>
+              </div>
+              <div className="font-bold text-sm">
+                User Checkout:
+                <br />
+                <span className="text-lg text-blue-600">{selectedData.user_name}</span>
+              </div>
+            </div>
+          )}
+        </div>
+        <label className="modal-backdrop" htmlFor="view_product">Close</label>
       </div>
     </div>
   );
