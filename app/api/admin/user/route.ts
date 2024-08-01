@@ -1,12 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import database from "@/database";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const getData = new Promise((resolve, reject) => {
       database.users.find({$not: {role: "1"}}, (err: any, docs: any) => resolve(docs));
     });
-    const data = await getData;
+    let data: any = await getData;
+
+    const searchParam = request.nextUrl.searchParams.get("search") ?? "";
+    const search = new RegExp(searchParam, "i");
+
+    data = data.filter((ab: any, index: any) => search.test(ab.username));
 
     return NextResponse.json(
       {message: data},

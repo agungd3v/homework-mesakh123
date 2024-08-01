@@ -1,8 +1,9 @@
 "use client";
 
 import { toastError, toastSuccess } from "@/plugins/toasification";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { BiSearch } from "react-icons/bi";
+import axios from "axios";
 
 export default function UserManagement() {
   const [data, setData] = useState<any[]>([]);
@@ -12,12 +13,13 @@ export default function UserManagement() {
   const [selectUser, setSelectUser] = useState<any>(null);
   const [loadSelected, setLoadSelected] = useState<boolean>(true);
   const [loadUpdate, setLoadUpdate] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState<string>("");
 
   const getData = async () => {
     setLoadData(true);
 
     try {
-      const request = await axios.get("/api/admin/user");
+      const request = await axios.get(`/api/admin/user?search=${searchText}`);
       if (request.status == 200) {
         setData(request.data.message);
       }
@@ -86,6 +88,25 @@ export default function UserManagement() {
 
   return (
     <div className="border">
+      <div className="border-b p-3 flex flex-col md:flex-row items-center justify-between">
+        <div></div>
+        <div className="w-full md:w-auto flex">
+          <input
+            type="text"
+            autoComplete="off"
+            placeholder="Search username..."
+            className="border text-sm outline-none rounded-l h-[36px] px-3 w-full md:w-[240px]"
+            onChange={(v: any) => setSearchText(v.target.value)}
+          />
+          <button
+            type="button"
+            className="h-[36px] px-3 rounded-r bg-blue-600"
+            onClick={getData}
+          >
+            <BiSearch size={20} color="#fff" />
+          </button>
+        </div>
+      </div>
       <div className="overflow-x-auto">
         <table className="table">
           <thead>
