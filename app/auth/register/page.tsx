@@ -1,12 +1,12 @@
 "use client";
 
-import axios from "axios";
 import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { toastError } from "@/plugins/toasification";
 import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
+import axios from "@/plugins/request";
 
 export default function Register() {
   const router = useRouter();
@@ -31,7 +31,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const request = await axios.post("/api/auth/register", {
+      const request = await axios.post("/auth/register", {
         data: register
       });
       if (request.status == 200) {

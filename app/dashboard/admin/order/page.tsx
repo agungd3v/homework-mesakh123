@@ -1,9 +1,9 @@
 "use client";
 
 import { toastError, toastSuccess } from "@/plugins/toasification";
-import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import axios from "@/plugins/request";
 
 export default function AdminOrder() {
   const [data, setData] = useState<any[]>([]);
@@ -21,7 +21,7 @@ export default function AdminOrder() {
     setLoading(true);
 
     try {
-      const request = await axios.get(`/api/admin/order?status=${status}`);
+      const request = await axios.get(`/admin/order?status=${status}`);
       if (request.status == 200) {
         setData(request.data.message);
       }
@@ -40,7 +40,7 @@ export default function AdminOrder() {
     setLoadChangeStatus(true);
 
     try {
-      const request = await axios.put("/api/admin/order", {
+      const request = await axios.put("/admin/order", {
         data: {id: param}
       });
       if (request.status == 200) {

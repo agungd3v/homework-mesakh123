@@ -29,7 +29,7 @@ export default function ProductTable(param: CProps) {
     setLoadDelete(true);
 
     try {
-      const request = await axios.delete("/api/admin/product", {
+      const request = await axios.delete("/admin/product", {
         data: {id: productId}
       });
       if (request.status == 200) {

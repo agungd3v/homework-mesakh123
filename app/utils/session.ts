@@ -13,11 +13,15 @@ export async function encrypt(param: any) {
 }
 
 export async function decrypt(param: string) {
-  const {payload} = await jwtVerify(param, key, {
-    algorithms: ["HS256"]
-  });
-
-  return payload;
+  try {
+    const {payload} = await jwtVerify(param, key, {
+      algorithms: ["HS256"]
+    });
+  
+    return payload;
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function generateSession(user: any) {
@@ -26,7 +30,7 @@ export async function generateSession(user: any) {
 
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
     const session = await encrypt({user, expires});
-    cookies().set("session", session, {expires, httpOnly: true});
+    cookies().set("session", session, {expires, httpOnly: false});
 
     return {status: true, message: "Login oke!"};
   }

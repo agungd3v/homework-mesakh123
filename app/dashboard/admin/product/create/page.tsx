@@ -1,10 +1,10 @@
 "use client";
 
-import axios from "axios";
 import { toastError, toastSuccess } from "@/plugins/toasification";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import Cleave from "cleave.js/react";
+import axios from "@/plugins/request";
 
 export default function AdminProductCreate() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function AdminProductCreate() {
       formData.append("product_price", product.product_price.split(".").join(""));
       formData.append("product_image", imageRef.current.files[0]);
 
-      const request = await axios.post("/api/admin/product", formData);
+      const request = await axios.post("/admin/product", formData);
       if (request.status == 200) {
         toastSuccess(request.data.message);
         return router.back();

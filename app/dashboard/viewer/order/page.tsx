@@ -1,8 +1,8 @@
 "use client";
 
-import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import axios from "@/plugins/request";
 
 export default function ViewerOrders() {
   const [data, setData] = useState<any[]>([]);
@@ -20,7 +20,7 @@ export default function ViewerOrders() {
     setLoading(true);
 
     try {
-      const request = await axios.get(`/api/viewer/order?status=${status}`);
+      const request = await axios.get(`/viewer/order?status=${status}`);
       if (request.status == 200) {
         setData(request.data.message);
       }

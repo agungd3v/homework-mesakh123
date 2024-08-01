@@ -3,7 +3,7 @@
 import { toastError, toastSuccess } from "@/plugins/toasification";
 import { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import axios from "axios";
+import axios from "@/plugins/request";
 
 export default function UserManagement() {
   const [data, setData] = useState<any[]>([]);
@@ -19,7 +19,7 @@ export default function UserManagement() {
     setLoadData(true);
 
     try {
-      const request = await axios.get(`/api/admin/user?search=${searchText}`);
+      const request = await axios.get(`/admin/user?search=${searchText}`);
       if (request.status == 200) {
         setData(request.data.message);
       }
@@ -35,7 +35,7 @@ export default function UserManagement() {
     // tmpData[index].active = checked ? 1 : 0;
     // setData(tmpData);
     try {
-      const request = await axios.put("/api/admin/user", {
+      const request = await axios.put("/admin/user", {
         data: {id: id, status: checked ? "1" : "0"}
       });
       if (request.status) {
@@ -52,7 +52,7 @@ export default function UserManagement() {
     setLoadSelected(true);
 
     try {
-      const request = await axios.get(`/api/admin/user/${id}`);
+      const request = await axios.get(`/admin/user/${id}`);
       if (request.status == 200) {
         setSelectUser(request.data.message);
       }
@@ -67,7 +67,7 @@ export default function UserManagement() {
     setLoadUpdate(true);
 
     try {
-      const request = await axios.put(`/api/admin/user/${selectUser._id}`, {
+      const request = await axios.put(`/admin/user/${selectUser._id}`, {
         data: selectUser
       });
       if (request.status == 200) {

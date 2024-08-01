@@ -1,9 +1,9 @@
 "use client";
 
 import { toastError } from "@/plugins/toasification";
-import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "@/plugins/request";
 
 export default function AdminProductUpdate() {
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function AdminProductUpdate() {
 
   const updateProduct = async () => {
     try {
-      const request = await axios.patch("/api/admin/product", {
+      const request = await axios.patch("/admin/product", {
         data: {
           id: params.update,
           product_name: product.product_name,
@@ -32,7 +32,7 @@ export default function AdminProductUpdate() {
   }
 
   const getDataProduct = async () => {
-    const request = await axios.put("/api/admin/product", {id: params.update});
+    const request = await axios.put("/admin/product", {id: params.update});
     if (request.status == 200) {
       setProduct({
         product_name: request.data.message.product_name,

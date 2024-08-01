@@ -1,9 +1,9 @@
 "use client";
 
 import ProductTable from "@/components/ProductTable";
-import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import axios from "@/plugins/request";
 
 export default function AdminProduct() {
   const [data, setData] = useState<any[]>([]);
@@ -13,7 +13,7 @@ export default function AdminProduct() {
     setLoadData(true);
 
     try {
-      const request = await axios.get("/api/admin/product");
+      const request = await axios.get("/admin/product");
       if (request.status == 200) {
         setData(request.data.message);
       }

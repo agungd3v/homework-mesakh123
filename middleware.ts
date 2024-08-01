@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "./app/utils/session";
+import { decrypt, getSession } from "./app/utils/session";
 
 export async function middleware(request: NextRequest) {
   const session = request.cookies.get("session")?.value;
@@ -31,15 +31,39 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // if (!session && request.nextUrl.pathname.startsWith("/api/admin")) {
-  //   return NextResponse.json({message: "api not found"}, {status: 404});
-  // }
-  // if (!session && request.nextUrl.pathname.startsWith("/api/manager")) {
-  //   return NextResponse.json({message: "api not found"}, {status: 404});
-  // }
-  // if (!session && request.nextUrl.pathname.startsWith("/api/viewer")) {
-  //   return NextResponse.json({message: "api not found"}, {status: 404});
-  // }
+  if (request.nextUrl.pathname.startsWith("/api/admin")) {
+    const headAuth: any = request.headers.get("authorization")?.split(" ");
+    if (headAuth && headAuth?.length > 1) {
+      const session: any = await decrypt(headAuth[1]);
+      if (session && session.user.role != "1") {
+        return NextResponse.json({message: "api not found"}, {status: 404});
+      }
+    } else {
+      return NextResponse.json({message: "api not found"}, {status: 404});
+    }
+  }
+  if (request.nextUrl.pathname.startsWith("/api/manager")) {
+    const headAuth: any = request.headers.get("authorization")?.split(" ");
+    if (headAuth && headAuth?.length > 1) {
+      const session: any = await decrypt(headAuth[1]);
+      if (session && session.user.role != "2") {
+        return NextResponse.json({message: "api not found"}, {status: 404});
+      }
+    } else {
+      return NextResponse.json({message: "api not found"}, {status: 404});
+    }
+  }
+  if (request.nextUrl.pathname.startsWith("/api/viewer")) {
+    const headAuth: any = request.headers.get("authorization")?.split(" ");
+    if (headAuth && headAuth?.length > 1) {
+      const session: any = await decrypt(headAuth[1]);
+      if (session && session.user.role != "3") {
+        return NextResponse.json({message: "api not found"}, {status: 404});
+      }
+    } else {
+      return NextResponse.json({message: "api not found"}, {status: 404});
+    }
+  }
 
   // if (session && request.nextUrl.pathname.startsWith("/api")) {
   //   const isSession: any = await getSession();

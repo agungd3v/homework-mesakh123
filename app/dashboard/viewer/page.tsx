@@ -1,10 +1,10 @@
 "use client";
 
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { toastError, toastSuccess } from "@/plugins/toasification";
 import { BiPlus, BiMinus } from "react-icons/bi";
+import axios from "@/plugins/request";
 
 export default function DashboardViewer() {
   const [products, setProducts] = useState<any[]>([]);
@@ -21,7 +21,7 @@ export default function DashboardViewer() {
     setLoading(true);
 
     try {
-      const request = await axios.get("/api/viewer/product");
+      const request = await axios.get("/viewer/product");
       if (request.status == 200) {
         setProducts(request.data.message);
       }
@@ -44,7 +44,7 @@ export default function DashboardViewer() {
     setLoadBuy(true);
 
     try {
-      const request = await axios.post("/api/viewer/order", {
+      const request = await axios.post("/viewer/order", {
         data: {id: productId, quantity: quantity}
       });
       if (request.status) {
