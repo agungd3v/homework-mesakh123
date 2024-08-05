@@ -13,9 +13,10 @@ export default function Sidebar() {
   const [menus, setMenus] = useState<any[]>([]);
 
   useEffect(() => {
-    const r = rts.filter((a: any) => a.role == user.data.role);
-    setMenus(r);
-    console.log(path);
+    if (user.user) {
+      const r = rts.filter((a: any) => a.role == user.user.role);
+      setMenus(r);
+    }
   }, [user]);
 
   return (

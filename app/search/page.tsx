@@ -6,13 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BiShoppingBag, BiMinus, BiPlus } from "react-icons/bi";
+import { BiShoppingBag, BiMinus, BiPlus, BiSolidTired } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function SearchPage() {
-  const user = useSelector((state: any) => state.user.data);
+  const user = useSelector((state: any) => state.user);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -26,6 +26,7 @@ export default function SearchPage() {
   const [loadBuy, setLoadBuy] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
   const [orderItem, setOrderItem] = useState<number>(0);
+  const [loadProduct, setLoadProduct] = useState<boolean>(true);
 
   const jumpSearch = (key: any) => {
     if (key.which == 13) {
@@ -34,6 +35,8 @@ export default function SearchPage() {
   }
 
   const getItems = async (search: string) => {
+    setLoadProduct(true);
+
     try {
       const request = await axios.get(`/product?search=${search}`);
       if (request.status == 200) {
@@ -42,6 +45,8 @@ export default function SearchPage() {
     } catch (error) {
       console.log(error);
     }
+
+    setLoadProduct(false);
   }
 
   const getOrders = async () => {
@@ -64,9 +69,9 @@ export default function SearchPage() {
   }
 
   const orderProduct = async (product: any) => {
-    if (user) {
+    if (user.user) {
       setLoadBuy(true);
-  
+
       try {
         const request = await axios.post("/viewer/order", {
           data: {id: productId, quantity: quantity}
@@ -79,7 +84,7 @@ export default function SearchPage() {
       } catch (error: any) {
         toastError(error.response.data.message);
       }
-  
+
       setLoadBuy(false);
     } else {
       router.push("/auth");
@@ -89,15 +94,18 @@ export default function SearchPage() {
   useEffect(() => {
     setSearch(searchParams.get("q") ?? "");
     getItems(searchParams.get("q") ?? "");
-    getOrders();
-  }, [searchParams]);
+
+    if (user.user && user.user.role == "3") {
+      getOrders();
+    }
+  }, [searchParams, user]);
 
   return (
     <div className="flex flex-col">
-      <div className="w-full h-48 bg-blue-600 flex items-center justify-center">
+      <div className="w-full h-48 bg-blue-600 flex items-center justify-center px-5">
         <div className="w-full md:w-1/2">
           <div className="text-center text-white mb-5 text-2xl font-bold flex justify-center items-center gap-3">
-            Homework
+            <Link href={"/"}>Homework</Link>
             {orderItem > 0 && <Link href={"/dashboard/viewer/order"} className="relative">
               <BiShoppingBag size={30} />
               <div className="absolute rounded text-xs bg-red-600 w-[15px] h-[15px] bottom-0 right-0">{orderItem}</div>
@@ -117,33 +125,66 @@ export default function SearchPage() {
         </div>
       </div>
       <div className="flex-1 flex justify-center">
-        <div className="px-3 py-10 w-full md:w-3/4">
-          <span className="text-xl font-bold">Product List</span>
+        {loadProduct && <div className="px-3 py-10 w-full md:w-3/4">
+          <div className="skeleton rounded-lg h-6 w-44"></div>
           <div className="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {items.map((item: any, index: number) => {
-              return (
-                <div key={index} className="border shadow rounded-lg overflow-hidden">
-                  <div className="w-full h-52">
-                    <Image src={`/images/${item.product_image}`} width={0} height={0} className="w-full h-52 object-cover object-top" alt={item.product_name} />
-                  </div>
-                  <div className="px-3 py-4">
-                    <h1 className="text-sm font-bold truncate">{item.product_name}</h1>
-                    <h3 className="text-blue-600 text-lg pt-2">Rp{Intl.NumberFormat("id-ID").format(parseInt(item.product_price))}</h3>
-                    <div className="mt-1">
-                      <label
-                        htmlFor="buy_product"
-                        className="bg-blue-600 block text-white flex items-center justify-center h-12 rounded-lg font-bold cursor-pointer"
-                        onClick={() => setSelected(item._id, item.product_name, item.product_price, item.product_image)}
-                      >
-                        Buy
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            <div className="">
+              <div className="skeleton rounded-lg w-full h-52"></div>
+              <div className="skeleton rounded-lg w-3/4 h-6 mt-3"></div>
+              <div className="skeleton rounded-lg w-3/4 h-6 mt-3"></div>
+            </div>
+            <div className="">
+              <div className="skeleton rounded-lg w-full h-52"></div>
+              <div className="skeleton rounded-lg w-3/4 h-6 mt-3"></div>
+              <div className="skeleton rounded-lg w-3/4 h-6 mt-3"></div>
+            </div>
+            <div className="">
+              <div className="skeleton rounded-lg w-full h-52"></div>
+              <div className="skeleton rounded-lg w-3/4 h-6 mt-3"></div>
+              <div className="skeleton rounded-lg w-3/4 h-6 mt-3"></div>
+            </div>
+            <div className="">
+              <div className="skeleton rounded-lg w-full h-52"></div>
+              <div className="skeleton rounded-lg w-3/4 h-6 mt-3"></div>
+              <div className="skeleton rounded-lg w-3/4 h-6 mt-3"></div>
+            </div>
           </div>
-        </div>
+        </div>}
+        {!loadProduct && (
+          <>
+            {items.length > 0 && <div className="px-3 py-10 w-full md:w-3/4">
+              <span className="text-xl font-bold">Product List</span>
+              <div className="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {items.map((item: any, index: number) => {
+                  return (
+                    <div key={index} className="border shadow rounded-lg overflow-hidden">
+                      <div className="w-full h-52">
+                        <Image src={`/images/${item.product_image}`} width={0} height={0} className="w-full h-52 object-cover object-top" alt={item.product_name} />
+                      </div>
+                      <div className="px-3 py-4">
+                        <h1 className="text-sm font-bold truncate">{item.product_name}</h1>
+                        <h3 className="text-blue-600 text-lg pt-2">Rp{Intl.NumberFormat("id-ID").format(parseInt(item.product_price))}</h3>
+                        <div className="mt-1">
+                          <label
+                            htmlFor="buy_product"
+                            className="bg-blue-600 block text-white flex items-center justify-center h-12 rounded-lg font-bold cursor-pointer"
+                            onClick={() => setSelected(item._id, item.product_name, item.product_price, item.product_image)}
+                          >
+                            Buy
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>}
+            {items.length < 1 && <div className="flex flex-col items-center mt-32">
+              <BiSolidTired color="#2563EB" size={150} />
+              <span>Oops, product not found</span>
+            </div>}
+          </>
+        )}
       </div>
       <input type="checkbox" id="buy_product" checked={modal} onChange={(v: any) => setModal(v.target.checked)} className="modal-toggle" />
       <div className="modal" role="dialog">
@@ -157,7 +198,7 @@ export default function SearchPage() {
             <br />
             <span className="text-lg text-blue-600">Rp. {Intl.NumberFormat("id-ID").format(parseInt(productPrice) * quantity)}</span>
           </div>
-          <div className="mt-3 flex justify-end">
+          {user.user && user.user.role == "3" && <div className="mt-3 flex justify-end">
             <div className="flex items-center gap-5">
               <button
                 type="button"
@@ -189,7 +230,7 @@ export default function SearchPage() {
                 {loadBuy ? "Buying..." : "Buy Product"}
               </button>
             </div>
-          </div>
+          </div>}
         </div>
         <label className="modal-backdrop" htmlFor="buy_product">Close</label>
       </div>

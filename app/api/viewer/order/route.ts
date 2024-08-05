@@ -14,19 +14,20 @@ export async function POST(request: Request) {
     const product: any = await getData;
     if (!product) throw "Error, product not found";
     if (!session) throw "Error, user not found";
+    if (session.role != "3") throw "Error, user role must viewer";
 
-    const document = {
-      user_id: session.user._id,
-      user_name: session.user.name,
-      product_id: product._id,
-      product_name: product.product_name,
-      product_price: product.product_price,
-      product_image: product.product_image,
-      quantity: requestData.data.quantity,
-      total: parseInt(product.product_price) * parseInt(requestData.data.quantity),
-      status: 1
-    }
-    await database.orders.insert(document);
+    // const document = {
+    //   user_id: session.user._id,
+    //   user_name: session.user.name,
+    //   product_id: product._id,
+    //   product_name: product.product_name,
+    //   product_price: product.product_price,
+    //   product_image: product.product_image,
+    //   quantity: requestData.data.quantity,
+    //   total: parseInt(product.product_price) * parseInt(requestData.data.quantity),
+    //   status: 1
+    // }
+    // await database.orders.insert(document);
 
     return NextResponse.json(
       {message: "Order succefully"},

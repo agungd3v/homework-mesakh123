@@ -1,17 +1,11 @@
 import { createSlice, Dispatch } from "@reduxjs/toolkit";
 
-interface User {
-  user: any
-}
-
 interface UserState {
-  data: User;
+  user: any;
 }
 
 const initialState: UserState = {
-  data: {
-    user: null
-  },
+  user: null,
 }
 
 const userSlice = createSlice({
@@ -21,7 +15,7 @@ const userSlice = createSlice({
     // Reducer for updating cardDetails after a successful resource fetch
     setUser(state, action) {
       const user = action.payload;
-      state.data = user;
+      state.user = user;
     },
   },
 });
