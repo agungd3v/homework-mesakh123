@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     if (!session) throw "Error, user not found";
 
     const document = {
-      user_id: session.user.id,
+      user_id: session.user._id,
       user_name: session.user.name,
       product_id: product._id,
       product_name: product.product_name,
@@ -50,12 +50,12 @@ export async function GET(request: NextRequest) {
     const requestStatus = request.nextUrl.searchParams.get("status");
     if (requestStatus) {
       if (requestStatus == "undefined") {
-        query = {user_id: session.user.id};
+        query = {user_id: session.user._id};
       } else {
         if (requestStatus == "0") {
-          query = {user_id: session.user.id};
+          query = {user_id: session.user._id};
         } else {
-          query = {user_id: session.user.id, status: parseInt(requestStatus)}
+          query = {user_id: session.user._id, status: parseInt(requestStatus)}
         }
       }
     }
