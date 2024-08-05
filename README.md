@@ -14,11 +14,19 @@ cat .env or .env.local
 NEXT_PUBLIC_SECRET_KEY="your_secret_key"
 ```
 
+Create folder images
+```bash
+mkdir public/images
+
+or
+
+cd public
+mkdir images
+```
+
 Install and run project
 ```bash
 npm install
 npm run build
 npm run start
 ```
-
-### open localhost:3000/auth in your browser
